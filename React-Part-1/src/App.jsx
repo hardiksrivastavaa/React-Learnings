@@ -1,15 +1,14 @@
 import "./App.css";
-import MessageBox from "./MessageBox";
+import MessageGroup from "./MessageGroup";
 import ProductGroup from "./ProductGroup";
+import AmazonCardGroup from "./Amazon Cards/AmazonCardGroup";
 
 export default function App() {
   return (
     <>
       <ProductGroup />
-      <MessageBox name="Hardik Srivastava" textColor="red" />
-      <MessageBox name="Vaishali Srivastava" textColor="yellow" />
-      <MessageBox name="Rama Srivastava" textColor="blue" />
-      <MessageBox name="Shirshak Srivastava" textColor="green" />
+      <MessageGroup />
+      <AmazonCardGroup />
     </>
   );
 }
