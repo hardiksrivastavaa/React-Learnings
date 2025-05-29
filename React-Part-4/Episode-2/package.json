@@ -1,0 +1,20 @@
+{
+  "name": "episode-2",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "parcel": "^2.15.2"
+  },
+  "dependencies": {
+    "episode-2": "file:",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "browserslist": []
+}
