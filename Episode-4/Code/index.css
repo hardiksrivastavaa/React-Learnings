@@ -24,13 +24,16 @@ body {
   justify-content: space-between;
   flex-direction: row;
   border-bottom: 2px solid;
-  background-color: #2ecc71;
 }
 
 .logo {
   height: 15vh;
-  background-color: aqua;
   /* border: 2px solid red; */
+}
+
+img {
+mix-blend-mode: multiply;
+
 }
 
 #navbar {
@@ -64,9 +67,17 @@ main {
 
 #search {
   padding: 10px;
+  text-align: center;
   font-size: 2rem;
   border: 1px solid green;
   background-color: aquamarine;
+}
+
+button {
+  cursor: pointer;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-size: large;
 }
 
 /* Main - Restaurant Container Styling */
