@@ -16,147 +16,39 @@ body {
   min-height: 100vh;
 }
 
-/* Header Styling */
-
-#header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  border-bottom: 2px solid;
-}
-
-.logo {
-  height: 15vh;
-  /* border: 2px solid red; */
-}
-
-img {
-mix-blend-mode: multiply;
-
-}
-
-#navbar {
-  /* border: 2px solid red; */
-  font-size: 2rem;
-}
-
-ul {
-  list-style-type: none;
-  display: flex;
-  gap: 60px;
-  margin-right: 30px;
-}
-
-li {
-  cursor: pointer;
-  transition: all;
-}
-
-li:hover {
-  border-bottom: 2px solid;
-}
-
 /* Main Styling */
-
-/* Main - SearchBar Styling */
 
 main {
   flex: 1;
 }
 
-#search {
-  padding: 10px;
-  text-align: center;
-  font-size: 2rem;
-  border: 1px solid green;
-  background-color: aquamarine;
+.hover-border-bottom:hover {
+  border-bottom: 2px solid #000;
 }
 
-button {
-  cursor: pointer;
-  padding: 10px 10px;
-  border-radius: 10px;
-  font-size: large;
+/* 
+
+Shimmer Effect 
+
+@keyframes shimmer {
+  0% {
+    background-position: -500px 0;
+  }
+  100% {
+    background-position: 500px 0;
+  }
 }
 
-/* Main - Restaurant Container Styling */
-
-#restaurant-container {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: yellow;
-  justify-content: center;
-  border: 1px solid;
+.shimmer-card {
+  background: linear-gradient(
+    to right,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite linear;
 }
 
-/* Main - Restaurant Card Styling */
-
-#restaurant-card {
-  max-width: 600px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  padding: 16px;
-  margin: 16px auto;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-#restaurant-card:hover {
-  border: 1px solid black;
-  transform: scale(1.02);
-}
-
-.restaurant-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.restaurant-info {
-  margin-top: 12px;
-}
-
-.restaurant-name {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.restaurant-cuisine,
-.restaurant-location {
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: 4px;
-}
-
-.restaurant-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.restaurant-rating {
-  color: #2ecc71;
-  font-weight: bold;
-}
-
-.restaurant-details {
-  color: #888;
-  font-size: 0.85rem;
-}
-
-/* Footer Styling */
-
-#footer {
-  position: sticky;
-  bottom: 0;
-  text-align: center;
-  padding: 10px;
-  border: 1px solid red;
-  background-color: gray;
-}
+*/

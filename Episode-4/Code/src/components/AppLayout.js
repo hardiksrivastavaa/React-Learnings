@@ -1,9 +1,9 @@
 
 // AppLayout Component ⤵
 
-import Main from "./main/Main";
-import Header from "./header/Header";
-import Footer from "./footer/Footer";
+import Main from "./Main";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const AppLayout = () => (
     <>
