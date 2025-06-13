@@ -1,25 +1,51 @@
-
-// Restaurant Card Component ⤵
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link } from "react-router-dom";
 
 const RestaurantCard = (props) => {
     const { restaurantsData } = props;
-    const { name, locality, avgRating, img } =
-        restaurantsData;
-        
+    const { resPath, name, locality, avgRating, img } = restaurantsData;
+
+    function capitalizeEachWord(sentence) {
+        return sentence
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
+    }
+
     return (
-        <div id="restaurant-card" className="card shadow-sm mb-4 rounded-4">
+        <div
+            id="restaurant-card"
+            className="card shadow-sm rounded-4 overflow-hidden w-100 h-100 d-flex flex-column"
+        >
             <img
                 src={img}
-                alt="Restaurant"
-                className="card-img-top p-1 rounded-bottom rounded-4 img-fluid"
+                alt={capitalizeEachWord(name)}
+                className="card-img-top img-fluid"
                 style={{ height: "200px", objectFit: "cover" }}
             />
-            <div className="card-body restaurant-info">
-                <h2 className="mb-4 card-title fs-4 restaurant-name">{name}</h2>
-                {/* <p className="mb-1 card-text restaurant-cuisine">{cuisines.join(", ")}</p> */}
-                <p className="mb-1 card-text restaurant-location">{locality}</p>
-                <p className="mb-1 card-text restaurant-rating">⭐ {avgRating}</p>
-                {/* <p className="mb-1 card-text restaurant-details">{time} • {costForTwo}</p> */}
+            <div className="card-body d-flex flex-column justify-content-between flex-grow-1">
+                <div>
+                    <h5 className="card-title fw-bold text-dark">
+                        {capitalizeEachWord(name)}
+                    </h5>
+                    <p className="card-text text-muted mb-1">
+                        <i className="bi bi-geo-alt-fill me-1 text-danger"></i>
+                        {locality}
+                    </p>
+                </div>
+                <p className="card-text text-muted mt-auto mb-0">
+                    <i className="bi bi-star-fill text-warning me-1"></i>
+                    {avgRating ? avgRating : "N/A"} / 5
+                </p>
+
+                <p className="mx-0 my-0">
+                    <Link
+                        className="btn btn-outline-primary mt-3"
+                        to={`/restaurants${resPath}`}
+                    >
+                        View more
+                    </Link>
+                </p>
             </div>
         </div>
     );

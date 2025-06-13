@@ -1,13 +1,10 @@
-
-// Footer Component ⤵
-
 const Footer = () => (
-    <footer>
-        <div
-            id="footer"
-            className="py-3 position-sticky bottom-0 text-center border-top"
-        >
-            <h5> &copy; Developed by Hardik Srivastava - 2025</h5>
+    <footer className="bg-dark text-light py-3 mt-auto">
+        <div className="container text-center">
+            <h6 className="mb-0">
+                &copy; {new Date().getFullYear()} | Developed by{" "}
+                <strong>Hardik Srivastava</strong>
+            </h6>
         </div>
     </footer>
 );

@@ -1,14 +1,11 @@
-
-// AppLayout Component ⤵
-
-import Main from "./Main";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
 const AppLayout = () => (
     <>
         <Header />
-        <Main />
+        <Outlet />
         <Footer />
     </>
 );

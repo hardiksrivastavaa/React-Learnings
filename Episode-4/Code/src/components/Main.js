@@ -1,141 +1,223 @@
-
-// Main Component ⤵
-
-import restaurantsData from "../../utils/restaurantData.js";
 import RestaurantCard from "./RestaurantCard.js";
 import Shimmer from "./Shimmer.js";
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Main = () => {
-    let [restaurants, setRestaurants] = useState([]);
-    let [city, setCity] = useState("lucknow");
-    let [inputRestaurant, setInputRestaurant] = useState("");
-    let [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  let [restaurants, setRestaurants] = useState([]);
+  const { city } = useParams();
+  const navigate = useNavigate();
+  let [inputRestaurant, setInputRestaurant] = useState("");
+  let [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  let [searchCity, setSearchCity] = useState("");
+  let [errorMsg, setErrorMsg] = useState("");
+  let [istopRated, setIsTopRated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    const topRatedRestaurants = () => {
-        const topRated = restaurants.filter(
-            (restaurant) => restaurant.avgRating > 4
-        );
-        setFilteredRestaurants(topRated);
-    };
+  const topRatedRestaurants = () => {
+    if (!istopRated) {
+      const topRated = restaurants.filter(
+        (restaurant) => restaurant.avgRating >= 4.5
+      );
+      setFilteredRestaurants(topRated);
+    } else {
+      setFilteredRestaurants(restaurants);
+    }
+    setIsTopRated(!istopRated);
+  };
 
-    useEffect(() => {
-        fetchRestaurantsData();
-    }, []);
+  useEffect(() => {
+    if (city) {
+      fetchRestaurants();
+    }
+  }, [city]);
 
-    const fetchRestaurantsData = async () => {
-        try {
-            const response = await fetch(
-                `https://www.zomato.com/webroutes/getPage?page_url=/${city}/trending-this-week&location=&isMobile=0`
-            );
+  const fetchRestaurants = async () => {
+    setLoading(true); // start shimmer
+    try {
+      const url = `https://www.zomato.com/webroutes/getPage?page_url=/${city
+        .toLowerCase()
+        .trim()}/trending-this-week&location=&isMobile=1`;
 
-            const json = await response?.json();
-            const cards = json?.page_data?.sections?.SECTION_ENTITIES_DATA;
-            // Optional Chaning
-            const maxLen = Math.max(cards?.length, restaurantsData.length);
-            const fetchedRestaurants = [];
+      const response = await fetch(url);
 
-            for (let i = 0; i < maxLen; i++) {
-                const info = cards?.[i];
-                const mockData = restaurantsData?.[i];
-                fetchedRestaurants.push({
-                    name: info?.name || mockData?.name,
-                    locality: info?.subtitleData?.locality?.text || mockData?.locality,
-                    avgRating: info?.rating?.aggregate_rating || mockData?.avgRating,
-                    img: info?.imageUrl || `${CARD_URL}${mockData?.img}`,
-                });
-            }
+      if (!response.ok) {
+        throw new Error("City not found");
+      }
 
-            setRestaurants(fetchedRestaurants);
-            setFilteredRestaurants(fetchedRestaurants);
-            setCity("");
-        } catch (error) {
-            console.error("Failed to fetch restaurant data:", error);
-        }
-    };
+      const json = await response?.json();
+      const cards = json?.page_data?.sections?.SECTION_ENTITIES_DATA;
+      const fetchedRestaurants = [];
 
-    const handleCityClick = () => {
-        console.log(city);
-        fetchRestaurantsData();
-    };
+      if (!cards || !cards.length) {
+        throw new Error("No restaurants found");
+      }
 
-    const handleCityChange = (e) => {
-        setCity(e.target.value);
-    };
+      for (let i = 0; i < cards?.length; i++) {
+        const info = cards?.[i];
+        const pathname = new URL(info?.url).pathname;
+        fetchedRestaurants.push({
+          resPath: pathname,
+          name: info?.name,
+          locality: info?.subtitleData?.locality?.text,
+          avgRating: info?.rating?.aggregate_rating,
+          img: info?.imageUrl,
+        });
+      }
 
-    const handleRestaurantChange = (e) => {
-        setInputRestaurant(e.target.value);
-    };
+      setRestaurants(fetchedRestaurants);
+      setFilteredRestaurants(fetchedRestaurants);
+      setErrorMsg("");
+    } catch (error) {
+      // console.error("Failed to fetch restaurant data:", error.message);
+      setErrorMsg(error.message || "Something went wrong");
+      setRestaurants([]);
+      setFilteredRestaurants([]);
+    } finally {
+      setLoading(false); // stop shimmer
+    }
+  };
 
-    const handleRestaurantClick = () => {
-        console.log(inputRestaurant);
-        let res = restaurants.filter((restaurant) =>
-            restaurant.name.toLowerCase().includes(inputRestaurant.toLowerCase())
-        );
-        setFilteredRestaurants(res);
-    };
+  const handleCityChange = (e) => {
+    setSearchCity(e.target.value);
+  };
 
-    return restaurants.length === 0 ? (
-        <Shimmer />
-    ) : (
-        <main>
-            <div id="main">
-                <div id="search" className="d-flex justify-center w-full">
-                    <button
-                        type="button"
-                        className="btn btn-outline-success mx-auto"
-                        onClick={topRatedRestaurants}
-                    >
-                        Top Rated Restaurant
-                    </button>
-                    <div className="d-flex mx-auto">
-                        <input
-                            className="form-control mx-2"
-                            type="text"
-                            placeholder="Search City"
-                            aria-label="Search"
-                            name="city"
-                            onChange={handleCityChange}
-                            value={city}
-                        />
-                        <button
-                            className="btn btn-outline-success"
-                            onClick={handleCityClick}
-                        >
-                            Search
-                        </button>
-                    </div>
-                    <div className="d-flex mx-auto">
-                        <input
-                            className="form-control mx-2"
-                            type="text"
-                            placeholder="Search Restaurant"
-                            aria-label="Search"
-                            name="restaurant"
-                            onChange={handleRestaurantChange}
-                            value={inputRestaurant}
-                        />
-                        <button
-                            className="btn btn-outline-success"
-                            onClick={handleRestaurantClick}
-                        >
-                            Search
-                        </button>
-                    </div>
-                </div>
+  const handleCityClick = () => {
+    if (!searchCity.trim()) {
+      alert("Please enter a city before searching.");
+      return;
+    }
 
-                <div id="restaurant-container" className="container my-4">
-                    <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 d-flex items-center g-lg-4 ">
-                        {filteredRestaurants.map((restaurant, index) => (
-                            <div className="col" key={index}>
-                                <RestaurantCard restaurantsData={restaurant} />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </main>
+    setSearchCity("");
+    navigate(`/restaurants/${searchCity.trim().toLowerCase()}`);
+  };
+
+  const handleRestaurantChange = (e) => {
+    setInputRestaurant(e.target.value);
+  };
+
+  const handleRestaurantClick = () => {
+    console.log(inputRestaurant);
+    let res = restaurants.filter((restaurant) =>
+      restaurant.name.toLowerCase().includes(inputRestaurant.toLowerCase())
     );
+    setFilteredRestaurants(res);
+    setInputRestaurant("");
+  };
+  return (
+    <main className="py-4">
+      <div className="container">
+        {/* 🔍 Search Section */}
+        <div
+          id="search"
+          className="row justify-content-center align-items-center g-3 mb-4"
+        >
+          {/* Top Rated Button */}
+          <div className="col-12 col-md-auto text-center">
+            <button
+              type="button"
+              className="btn btn-outline-success w-100"
+              onClick={topRatedRestaurants}
+            >
+              Top Rated Restaurants
+            </button>
+          </div>
+
+          {/* City Search */}
+          <div className="col-12 col-md-4">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search City"
+                onChange={handleCityChange}
+                value={searchCity}
+              />
+              <button
+                className="btn btn-outline-success"
+                onClick={handleCityClick}
+              >
+                Search
+              </button>
+            </div>
+          </div>
+
+          {/* Restaurant Search */}
+          <div className="col-12 col-md-4">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search Restaurant"
+                onChange={handleRestaurantChange}
+                value={inputRestaurant}
+              />
+              <button
+                className="btn btn-outline-success"
+                onClick={handleRestaurantClick}
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Show shimmer if loading */}
+        {loading ? (
+          <Shimmer />
+        ) : (
+          <>
+            {/* 🔴 Error Message */}
+            {errorMsg && (
+              <div
+                className="alert alert-danger text-center fw-bold fs-5"
+                role="alert"
+              >
+                ⚠️ {errorMsg}
+              </div>
+            )}
+
+            {/* 🔁 Reset Button */}
+            {!errorMsg && filteredRestaurants.length !== restaurants.length && (
+              <div className="text-center mb-4">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setFilteredRestaurants(restaurants)}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            )}
+
+            {/* 🙁 No Results Found */}
+            {!errorMsg && filteredRestaurants.length === 0 && (
+              <div
+                className="alert alert-warning text-center fw-bold fs-5"
+                role="alert"
+              >
+                🙁 No matching restaurants found.
+              </div>
+            )}
+
+            {/* 🍴 Restaurant Grid */}
+            <div
+              id="restaurant-container"
+              className="row g-4 align-items-stretch"
+            >
+              {filteredRestaurants.map((restaurant, index) => (
+                <div
+                  className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
+                  key={index}
+                >
+                  <RestaurantCard restaurantsData={restaurant} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </main>
+  );
 };
 
 export default Main;
