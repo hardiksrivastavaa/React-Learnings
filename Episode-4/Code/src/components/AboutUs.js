@@ -1,3 +1,5 @@
+import React from "react";
+
 const AboutUs = () => {
   return (
     <div className="container py-5 d-flex flex-column justify-content-center align-items-center text-center">

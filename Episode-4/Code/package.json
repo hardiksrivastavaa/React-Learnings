@@ -12,12 +12,14 @@
   "description": "",
   "dependencies": {
     "@parcel/transformer-js": "^2.15.2",
+    "@tailwindcss/postcss": "^4.1.11",
     "bootstrap-icons": "^1.13.1",
     "code": "file:",
     "parcel": "^2.15.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-loading-skeleton": "^3.5.0",
-    "react-router-dom": "^6.30.1"
+    "react-router-dom": "^6.30.1",
+    "tailwindcss": "^4.1.11"
   }
 }

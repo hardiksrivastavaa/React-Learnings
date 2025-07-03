@@ -1,6 +1,7 @@
+import useOnlineStatus from "../../utils/useOnlineStatus.js";
 import RestaurantCard from "./RestaurantCard.js";
 import Shimmer from "./Shimmer.js";
-import { useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const Main = () => {
@@ -32,8 +33,9 @@ const Main = () => {
     }
   }, [city]);
 
+
   const fetchRestaurants = async () => {
-    setLoading(true); // start shimmer
+    setLoading(true);
     try {
       const url = `https://www.zomato.com/webroutes/getPage?page_url=/${city
         .toLowerCase()
@@ -69,12 +71,11 @@ const Main = () => {
       setFilteredRestaurants(fetchedRestaurants);
       setErrorMsg("");
     } catch (error) {
-      // console.error("Failed to fetch restaurant data:", error.message);
       setErrorMsg(error.message || "Something went wrong");
       setRestaurants([]);
       setFilteredRestaurants([]);
     } finally {
-      setLoading(false); // stop shimmer
+      setLoading(false);
     }
   };
 
@@ -104,6 +105,21 @@ const Main = () => {
     setFilteredRestaurants(res);
     setInputRestaurant("");
   };
+
+  const onlineStatus = useOnlineStatus();
+
+  if (!onlineStatus) {
+    return (
+      <div className="container mt-5">
+        <div className="alert alert-danger text-center" role="alert">
+          <h1 className="display-4 fw-bold mb-3">Oops!</h1>
+          <p className="lead">Looks like you are <strong>offline</strong>!</p>
+          <p className="mb-0">Check your internet connection and try again.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <main className="py-4">
       <div className="container">
